@@ -1,9 +1,4 @@
 # **Sign Language Dataset Generator**
-Here's your updated **README.md** with additional instructions on input and output file handling:  
-
----
-
-# **Hand Picture Extractor from Videos**  
 
 This program extracts **hand images from videos** and converts them into a **picture dataset**. It processes video files, detects hands, and saves cropped hand images as **PNG files** (or other formats).  
 
