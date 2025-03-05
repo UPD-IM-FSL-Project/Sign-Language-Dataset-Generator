@@ -1,4 +1,5 @@
 import mediapipe as mp
+import numpy as np
 import cv2
 import os
 from data_processing import *
@@ -10,12 +11,14 @@ mp_pose = mp.solutions.pose
 
 # ====================================================== #
 # Settings
-height_width = 100 # Supports square outputs for now
+height_width =  224 # Supports square outputs for now
 output_format = "png" # File format of the image
 buffer = 5 # % of padding around the hand
-flipped = True # Flip the video horizontally
-start_extraction = 1.5 # Number of seconds before starting the extraction
-num_sec = 2.5 # Number of seconds to extract after start_extraction seconds 
+hflipped = True # Flip the video horizontally
+vflipped = False # Flip the video vertically
+angle = 0 # Angle of rotation
+start_extraction = 0 # Number of seconds before starting the extraction
+num_sec = 16 # Number of seconds to extract after start_extraction seconds 
 # ====================================================== #
 # Call process_all() if you want to process all the videos in the input_videos folder
 # Call process(filename) if you want to process a specific video in the input_videos folder
@@ -35,7 +38,7 @@ def process(filename = 0):
     cap = cv2.VideoCapture(filename) if filename == 0 else cv2.VideoCapture("input_videos/" + filename)
     fps = cap.get(cv2.CAP_PROP_FPS)
 
-    with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) as hands:
+    with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.2) as hands:
         frame_count = 0
         frame_passed = 0
         frame_start = fps*start_extraction
@@ -44,7 +47,13 @@ def process(filename = 0):
         while True:
             frame_passed += 1
             ret, frame = cap.read()
-            frame = cv2.flip(frame,1) if flipped else frame
+            (h, w) = frame.shape[:2]
+
+            frame = cv2.flip(frame,1) if hflipped else frame
+            frame = cv2.flip(frame,0) if vflipped else frame
+            center = (w // 2, h // 2)
+            rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
+            frame = cv2.warpAffine(frame, rotation_matrix, (w, h))
             if not ret:
                 break
             image, _landmarks_list, _landmark_connections, hand_used = detect_upperbody(frame, hands)
@@ -67,7 +76,7 @@ def process(filename = 0):
 
                     # Calculate the box
     
-                    buffer = 5
+                    # buffer = 5
                     xs = [landmark.x for landmark in _landmarks_list.landmark]
                     ys = [landmark.y for landmark in _landmarks_list.landmark]
                     
@@ -172,8 +181,8 @@ def process_all():
         process(video)
 
 
-process_all()
-# process()
+# process_all()
+process("enye.mp4")
 
 
 
