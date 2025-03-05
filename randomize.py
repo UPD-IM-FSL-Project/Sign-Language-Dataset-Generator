@@ -32,19 +32,20 @@ def randomize(folder: str):
     cap = ImageFeed("output_images/"+folder, loop=False)
     frame_count = 0
     while True:
-        frame_count += 1
+        
         ret, frame = cap.read()
         if not ret:
             break
         (h, w) = frame.shape[:2]
         randomize = np.random.randint(-30, 30) if random_brightness or random_hflip else 0
-        frame = np.clip(frame + randomize, 0, 255).astype(np.uint8)
+        frame = np.clip(frame.astype(np.float32) + randomize, 0, 255).astype(np.uint8)
         frame = cv2.flip(frame,1) if randomize % 2 == 0 else frame
         angle = 0
         center = (w // 2, h // 2)
         rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
         frame = cv2.warpAffine(frame, rotation_matrix, (w, h))
         cv2.imwrite(f"{output_dir}\{frame_count}.{output_format}", frame)
+        frame_count += 1
 
 def randomize_all():
     for folder in image_folders:
