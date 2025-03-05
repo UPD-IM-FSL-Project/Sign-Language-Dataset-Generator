@@ -6,7 +6,7 @@ This program extracts **hand images from videos** and converts them into a **pic
 ✅ Extracts hands from **videos or live webcam feeds**  
 ✅ Supports multiple video formats: **MP4, AVI, MOV, MKV, WMV**  
 ✅ Allows **custom padding, flipping, and extraction timing**  
-✅ Saves images in a structured dataset format 
+✅ Saves images in a structured dataset format \
 ✅ **Random brightness adjustments** to simulate different lighting conditions  
 ✅ **Random horizontal flipping** for variation in hand orientation  
 ✅ **Random rotations** within a specified degree range
