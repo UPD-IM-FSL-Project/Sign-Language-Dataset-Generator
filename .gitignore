@@ -2,7 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+output_images\camera
+output_images\enye
+randomized_images\camera
+randomized_images\enye
 # C extensions
 *.so
 
